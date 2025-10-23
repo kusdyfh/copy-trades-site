@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصفقات - نسخ الصفقات</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>نسخ الصفقات الاحترافية</h1>
+            <p>الصفقات المتاحة للنسخ</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="dealsSection">
+            <!-- سيتم تحميل المحتوى هنا بناءً على حالة الاشتراك -->
+        </section>
+        
+        <div class="back-link">
+            <a href="index.html">← العودة للصفحة الرئيسية</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 نسخ الصفقات. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dealsSection = document.getElementById('dealsSection');
+            const userEmail = localStorage.getItem('userEmail');
+            
+            if (userEmail) {
+                dealsSection.innerHTML = `
+                    <h2>الصفقات المتاحة</h2>
+                    <p class="success-message">مرحباً ${userEmail}، يمكنك الآن الوصول إلى جميع الصفقات!</p>
+                    <div class="deals-list">
+                        <div class="deal-card">
+                            <h3>صفقة الذهب</h3>
+                            <p>شراء عند $1,850 - هدف $1,900 - إيقاف $1,840</p>
+                            <button class="copy-button" onclick="copyDeal('صفقة الذهب: شراء عند $1,850 - هدف $1,900 - إيقاف $1,840')">نسخ الصفقة</button>
+                        </div>
+                        <div class="deal-card">
+                            <h3>صفقة اليورو/دولار</h3>
+                            <p>بيع عند 1.0850 - هدف 1.0780 - إيقاف 1.0900</p>
+                            <button class="copy-button" onclick="copyDeal('صفقة اليورو/دولار: بيع عند 1.0850 - هدف 1.0780 - إيقاف 1.0900')">نسخ الصفقة</button>
+                        </div>
+                        <div class="deal-card">
+                            <h3>صفقة البيتكوين</h3>
+                            <p>شراء عند $29,500 - هدف $31,000 - إيقاف $28,800</p>
+                            <button class="copy-button" onclick="copyDeal('صفقة البيتكوين: شراء عند $29,500 - هدف $31,000 - إيقاف $28,800')">نسخ الصفقة</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                dealsSection.innerHTML = `
+                    <div class="access-denied">
+                        <h2>الوصول مقيد</h2>
+                        <p>يرجى الدفع للوصول إلى الصفقات الحصرية.</p>
+                        <a href="payment.html" class="cta-button">اشترك الآن</a>
+                    </div>
+                `;
+            }
+        });
+        
+        function copyDeal(dealText) {
+            navigator.clipboard.writeText(dealText).then(function() {
+                alert('تم نسخ الصفقة بنجاح!');
+            }, function(err) {
+                console.error('فشل في نسخ الصفقة: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
