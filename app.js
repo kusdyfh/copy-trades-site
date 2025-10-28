@@ -1,10 +1,10 @@
-// ====== Hero Section ======
 const app = document.getElementById("app");
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// ====== Hero Section ======
 function Hero() {
   return `
-    <section class="py-12">
+    <section class="py-12 text-center">
       <h1 class="text-4xl font-bold mb-2">Welcome to Broker CORP</h1>
       <p class="text-neutral-400 mb-4">Professional trading platform connecting you to verified traders worldwide.</p>
       <button class="px-4 py-2 border rounded" onclick="show('traders')">Explore Traders</button>
@@ -15,11 +15,11 @@ function Hero() {
 function TradersList() {
   return `
     <section class="py-12">
-      <h2 class="text-2xl font-semibold mb-4">Top Traders</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-center">Top Traders</h2>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         ${TRADERS.map(
           (t) => `
-          <div class="card">
+          <div class="border border-neutral-800 p-4 rounded-xl bg-neutral-900 hover:bg-neutral-800 transition">
             <div class="font-semibold">${t.name} <span class="text-xs text-neutral-500">(${t.market})</span></div>
             <div class="text-neutral-400 text-sm">ROI ${Math.round(t.roi * 100)}% | WIN ${Math.round(t.win * 100)}%</div>
             <div class="text-neutral-400 text-sm">Experience: ${t.years} yrs</div>
@@ -51,10 +51,10 @@ function TraderProfile(id) {
 function Wallet() {
   const plan = localStorage.getItem("plan") || "None";
   return `
-    <section class="py-12">
+    <section class="py-12 text-center">
       <h2 class="text-2xl font-semibold mb-4">Wallet</h2>
       <p>Selected Trader: <b>${plan}</b></p>
-      <p class="text-neutral-400 mt-2">Use NOWPayments for secure payment.</p>
+      <p class="text-neutral-400 mt-2">Use NOWPayments for secure crypto payments.</p>
       <button class="mt-4 px-4 py-2 border rounded" onclick="show('traders')">Back to Traders</button>
     </section>`;
 }
@@ -71,7 +71,7 @@ function openProfile(id) {
   app.innerHTML = TraderProfile(id);
 }
 
-// ====== Subscribe Action ======
+// ====== Subscribe ======
 function subscribe(id) {
   const t = TRADERS.find((x) => x.id === id);
   localStorage.setItem("plan", t.name);
