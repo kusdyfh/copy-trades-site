@@ -1,9 +1,7 @@
-import { TRADERS, priceForTrader } from "./data.js";
-
+// ====== Hero Section ======
 const app = document.getElementById("app");
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// ====== Hero Section ======
 function Hero() {
   return `
     <section class="py-12">
