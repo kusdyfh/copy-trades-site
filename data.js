@@ -1,5 +1,5 @@
 // ====== Traders Database (60 realistic profiles) ======
-export const TRADERS = [
+const TRADERS = [
   { id: "t1", name: "AlphaFX", country: "USA", market: "Forex", roi: 0.72, win: 0.83, years: 7, style: "Scalping & News trading" },
   { id: "t2", name: "GoldHawk", country: "UAE", market: "Gold", roi: 0.58, win: 0.78, years: 6, style: "Swing trading on commodities" },
   { id: "t3", name: "CryptoNinja", country: "Singapore", market: "Crypto", roi: 1.25, win: 0.74, years: 8, style: "On-chain and technical analysis" },
@@ -63,7 +63,7 @@ export const TRADERS = [
 ];
 
 // ====== Dynamic Pricing Based on ROI & WIN ======
-export function priceForTrader(t) {
+function priceForTrader(t) {
   const base = 25 + ((t.roi + t.win) / 2) * 30;
   return Math.round(base * 10) / 10;
 }
