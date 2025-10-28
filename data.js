@@ -1,12 +1,69 @@
-// بيانات المتداولين (مثال)
-const TRADERS = [
-  { id: "t1", name: "AlphaFX", roi: 0.56, win: 0.82 },
-  { id: "t2", name: "GoldHawk", roi: 0.42, win: 0.79 },
-  { id: "t3", name: "CryptoNinja", roi: 1.12, win: 0.71 }
+// ====== Traders Database (60 realistic profiles) ======
+export const TRADERS = [
+  { id: "t1", name: "AlphaFX", country: "USA", market: "Forex", roi: 0.72, win: 0.83, years: 7, style: "Scalping & News trading" },
+  { id: "t2", name: "GoldHawk", country: "UAE", market: "Gold", roi: 0.58, win: 0.78, years: 6, style: "Swing trading on commodities" },
+  { id: "t3", name: "CryptoNinja", country: "Singapore", market: "Crypto", roi: 1.25, win: 0.74, years: 8, style: "On-chain and technical analysis" },
+  { id: "t4", name: "EuroWave", country: "Germany", market: "Forex", roi: 0.66, win: 0.81, years: 5, style: "Elliott Wave patterns" },
+  { id: "t5", name: "ZenTrader", country: "Japan", market: "Indices", roi: 0.49, win: 0.84, years: 9, style: "High-probability setups" },
+  { id: "t6", name: "TitanOil", country: "Canada", market: "Oil", roi: 0.77, win: 0.75, years: 10, style: "Institutional volume trading" },
+  { id: "t7", name: "SwissEdge", country: "Switzerland", market: "Forex", roi: 0.64, win: 0.82, years: 6, style: "Risk-adjusted trend following" },
+  { id: "t8", name: "WaveKing", country: "UK", market: "Indices", roi: 0.69, win: 0.79, years: 7, style: "Technical momentum trader" },
+  { id: "t9", name: "BlockMaster", country: "Hong Kong", market: "Crypto", roi: 1.34, win: 0.73, years: 8, style: "Quantitative crypto trader" },
+  { id: "t10", name: "IronFund", country: "USA", market: "Stocks", roi: 0.45, win: 0.86, years: 12, style: "Equity fundamental analyst" },
+  { id: "t11", name: "MetaWave", country: "Netherlands", market: "Forex", roi: 0.74, win: 0.77, years: 6, style: "AI-driven pattern trading" },
+  { id: "t12", name: "SkyTrade", country: "Australia", market: "Commodities", roi: 0.53, win: 0.85, years: 5, style: "Breakout strategy" },
+  { id: "t13", name: "SilverEdge", country: "Canada", market: "Silver", roi: 0.61, win: 0.79, years: 8, style: "Metal spread analysis" },
+  { id: "t14", name: "VoltaFX", country: "France", market: "Forex", roi: 0.83, win: 0.72, years: 9, style: "High-volatility scalping" },
+  { id: "t15", name: "DeltaTrader", country: "UK", market: "Indices", roi: 0.57, win: 0.81, years: 5, style: "Volume profile strategy" },
+  { id: "t16", name: "SkyPip", country: "Singapore", market: "Crypto", roi: 1.42, win: 0.69, years: 7, style: "AI-based trend detection" },
+  { id: "t17", name: "AurumFX", country: "Qatar", market: "Gold", roi: 0.71, win: 0.77, years: 10, style: "Institutional correlation trading" },
+  { id: "t18", name: "TradeViking", country: "Norway", market: "Forex", roi: 0.68, win: 0.81, years: 9, style: "Long-term swing trades" },
+  { id: "t19", name: "NeonTrader", country: "USA", market: "Crypto", roi: 1.19, win: 0.74, years: 6, style: "Volume delta strategy" },
+  { id: "t20", name: "MomentumX", country: "UK", market: "Stocks", roi: 0.52, win: 0.83, years: 5, style: "Momentum + risk reward setups" },
+  { id: "t21", name: "GoldenEye", country: "Egypt", market: "Gold", roi: 0.64, win: 0.82, years: 8, style: "Correlation + macro approach" },
+  { id: "t22", name: "OceanFX", country: "Brazil", market: "Forex", roi: 0.76, win: 0.79, years: 10, style: "Wave & trend identification" },
+  { id: "t23", name: "LunaTrade", country: "Turkey", market: "Crypto", roi: 1.21, win: 0.72, years: 6, style: "Risk-managed intraday trading" },
+  { id: "t24", name: "SilverWolf", country: "USA", market: "Silver", roi: 0.58, win: 0.84, years: 11, style: "Pattern recognition" },
+  { id: "t25", name: "IronScalp", country: "Germany", market: "Forex", roi: 0.81, win: 0.76, years: 8, style: "Short-term precision entries" },
+  { id: "t26", name: "TradePulse", country: "Canada", market: "Indices", roi: 0.67, win: 0.78, years: 7, style: "Mean reversion" },
+  { id: "t27", name: "TitanCore", country: "USA", market: "Stocks", roi: 0.55, win: 0.83, years: 9, style: "Institutional trend following" },
+  { id: "t28", name: "CryptoCore", country: "Singapore", market: "Crypto", roi: 1.37, win: 0.68, years: 8, style: "Spot & futures trader" },
+  { id: "t29", name: "MetaScalp", country: "Italy", market: "Forex", roi: 0.74, win: 0.78, years: 10, style: "Algorithmic scalping" },
+  { id: "t30", name: "AeroTrade", country: "Spain", market: "Indices", roi: 0.61, win: 0.82, years: 5, style: "Technical breakout trader" },
+  { id: "t31", name: "AetherFX", country: "UAE", market: "Forex", roi: 0.83, win: 0.74, years: 9, style: "Price action & order flow" },
+  { id: "t32", name: "CryptoWhale", country: "Canada", market: "Crypto", roi: 1.48, win: 0.69, years: 7, style: "Blockchain-driven analytics" },
+  { id: "t33", name: "GoldenBear", country: "USA", market: "Gold", roi: 0.65, win: 0.79, years: 8, style: "Sentiment and volume strategy" },
+  { id: "t34", name: "DeltaWave", country: "Australia", market: "Indices", roi: 0.59, win: 0.81, years: 10, style: "Pattern recognition" },
+  { id: "t35", name: "VoltFX", country: "UK", market: "Forex", roi: 0.79, win: 0.75, years: 9, style: "Smart money concept" },
+  { id: "t36", name: "ZenEdge", country: "Japan", market: "Forex", roi: 0.71, win: 0.77, years: 8, style: "Fibonacci-based swing trading" },
+  { id: "t37", name: "TradeNova", country: "Turkey", market: "Crypto", roi: 1.23, win: 0.72, years: 6, style: "Volume + trend continuation" },
+  { id: "t38", name: "StormTrader", country: "Norway", market: "Oil", roi: 0.78, win: 0.77, years: 7, style: "Energy market fundamentals" },
+  { id: "t39", name: "NeuralTrade", country: "USA", market: "Stocks", roi: 0.49, win: 0.84, years: 10, style: "AI-driven portfolio" },
+  { id: "t40", name: "NovaEdge", country: "UK", market: "Indices", roi: 0.67, win: 0.79, years: 8, style: "Breakout & pullback entries" },
+  { id: "t41", name: "AtlasFX", country: "France", market: "Forex", roi: 0.81, win: 0.76, years: 7, style: "Smart flow detection" },
+  { id: "t42", name: "CryptoEcho", country: "India", market: "Crypto", roi: 1.39, win: 0.71, years: 6, style: "On-chain liquidity trader" },
+  { id: "t43", name: "SkylineTrade", country: "USA", market: "Indices", roi: 0.68, win: 0.8, years: 9, style: "Institutional-level scalper" },
+  { id: "t44", name: "PhoenixFX", country: "Italy", market: "Forex", roi: 0.77, win: 0.74, years: 5, style: "Trendline breakout expert" },
+  { id: "t45", name: "OrbitalTrade", country: "Spain", market: "Stocks", roi: 0.54, win: 0.84, years: 10, style: "Momentum with macro view" },
+  { id: "t46", name: "TradeLion", country: "South Africa", market: "Gold", roi: 0.69, win: 0.81, years: 9, style: "Commodity market analyst" },
+  { id: "t47", name: "VoltEdge", country: "USA", market: "Forex", roi: 0.8, win: 0.76, years: 10, style: "Multi-timeframe confluence" },
+  { id: "t48", name: "PipHunter", country: "UK", market: "Forex", roi: 0.74, win: 0.78, years: 8, style: "Market structure trader" },
+  { id: "t49", name: "CryptoStorm", country: "USA", market: "Crypto", roi: 1.33, win: 0.7, years: 7, style: "Futures momentum expert" },
+  { id: "t50", name: "IronSignal", country: "Germany", market: "Indices", roi: 0.66, win: 0.8, years: 8, style: "Institutional index trader" },
+  { id: "t51", name: "WavePilot", country: "France", market: "Forex", roi: 0.73, win: 0.77, years: 6, style: "Harmonic patterns" },
+  { id: "t52", name: "AeroFX", country: "Brazil", market: "Forex", roi: 0.79, win: 0.75, years: 7, style: "Dynamic trend reversal" },
+  { id: "t53", name: "BlockVibe", country: "USA", market: "Crypto", roi: 1.22, win: 0.73, years: 8, style: "DeFi alpha discovery" },
+  { id: "t54", name: "TradeSensei", country: "Japan", market: "Forex", roi: 0.75, win: 0.78, years: 10, style: "Precision scalping" },
+  { id: "t55", name: "GoldenSphere", country: "Qatar", market: "Gold", roi: 0.67, win: 0.79, years: 9, style: "Macro + technical fusion" },
+  { id: "t56", name: "CryptoFlow", country: "UAE", market: "Crypto", roi: 1.45, win: 0.71, years: 8, style: "Quant models and bots" },
+  { id: "t57", name: "TradeMatrix", country: "USA", market: "Stocks", roi: 0.59, win: 0.83, years: 9, style: "Quant-driven equity selection" },
+  { id: "t58", name: "WaveX", country: "Turkey", market: "Forex", roi: 0.76, win: 0.77, years: 6, style: "Harmonic retracement" },
+  { id: "t59", name: "BlockVision", country: "Singapore", market: "Crypto", roi: 1.41, win: 0.7, years: 7, style: "AI pattern detection" },
+  { id: "t60", name: "OmegaTrade", country: "USA", market: "Indices", roi: 0.7, win: 0.8, years: 10, style: "Macro trend following" }
 ];
 
-// دالة لحساب السعر
-function priceForTrader(t) {
-  const base = 30 + ((t.roi + t.win) / 2) * 20;
-  return Math.round(base);
+// ====== Dynamic Pricing Based on ROI & WIN ======
+export function priceForTrader(t) {
+  const base = 25 + ((t.roi + t.win) / 2) * 30;
+  return Math.round(base * 10) / 10;
 }
