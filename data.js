@@ -1,4 +1,6 @@
-// ====== Traders Database (60 realistic profiles) ======
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// 60 Traders (واقعية)
 const TRADERS = [
   { id: "t1", name: "AlphaFX", country: "USA", market: "Forex", roi: 0.72, win: 0.83, years: 7, style: "Scalping & News trading" },
   { id: "t2", name: "GoldHawk", country: "UAE", market: "Gold", roi: 0.58, win: 0.78, years: 6, style: "Swing trading on commodities" },
@@ -42,14 +44,14 @@ const TRADERS = [
   { id: "t40", name: "NovaEdge", country: "UK", market: "Indices", roi: 0.67, win: 0.79, years: 8, style: "Breakout & pullback entries" },
   { id: "t41", name: "AtlasFX", country: "France", market: "Forex", roi: 0.81, win: 0.76, years: 7, style: "Smart flow detection" },
   { id: "t42", name: "CryptoEcho", country: "India", market: "Crypto", roi: 1.39, win: 0.71, years: 6, style: "On-chain liquidity trader" },
-  { id: "t43", name: "SkylineTrade", country: "USA", market: "Indices", roi: 0.68, win: 0.8, years: 9, style: "Institutional-level scalper" },
+  { id: "t43", name: "SkylineTrade", country: "USA", market: "Indices", roi: 0.68, win: 0.80, years: 9, style: "Institutional-level scalper" },
   { id: "t44", name: "PhoenixFX", country: "Italy", market: "Forex", roi: 0.77, win: 0.74, years: 5, style: "Trendline breakout expert" },
   { id: "t45", name: "OrbitalTrade", country: "Spain", market: "Stocks", roi: 0.54, win: 0.84, years: 10, style: "Momentum with macro view" },
   { id: "t46", name: "TradeLion", country: "South Africa", market: "Gold", roi: 0.69, win: 0.81, years: 9, style: "Commodity market analyst" },
-  { id: "t47", name: "VoltEdge", country: "USA", market: "Forex", roi: 0.8, win: 0.76, years: 10, style: "Multi-timeframe confluence" },
+  { id: "t47", name: "VoltEdge", country: "USA", market: "Forex", roi: 0.80, win: 0.76, years: 10, style: "Multi-timeframe confluence" },
   { id: "t48", name: "PipHunter", country: "UK", market: "Forex", roi: 0.74, win: 0.78, years: 8, style: "Market structure trader" },
-  { id: "t49", name: "CryptoStorm", country: "USA", market: "Crypto", roi: 1.33, win: 0.7, years: 7, style: "Futures momentum expert" },
-  { id: "t50", name: "IronSignal", country: "Germany", market: "Indices", roi: 0.66, win: 0.8, years: 8, style: "Institutional index trader" },
+  { id: "t49", name: "CryptoStorm", country: "USA", market: "Crypto", roi: 1.33, win: 0.70, years: 7, style: "Futures momentum expert" },
+  { id: "t50", name: "IronSignal", country: "Germany", market: "Indices", roi: 0.66, win: 0.80, years: 8, style: "Institutional index trader" },
   { id: "t51", name: "WavePilot", country: "France", market: "Forex", roi: 0.73, win: 0.77, years: 6, style: "Harmonic patterns" },
   { id: "t52", name: "AeroFX", country: "Brazil", market: "Forex", roi: 0.79, win: 0.75, years: 7, style: "Dynamic trend reversal" },
   { id: "t53", name: "BlockVibe", country: "USA", market: "Crypto", roi: 1.22, win: 0.73, years: 8, style: "DeFi alpha discovery" },
@@ -58,12 +60,13 @@ const TRADERS = [
   { id: "t56", name: "CryptoFlow", country: "UAE", market: "Crypto", roi: 1.45, win: 0.71, years: 8, style: "Quant models and bots" },
   { id: "t57", name: "TradeMatrix", country: "USA", market: "Stocks", roi: 0.59, win: 0.83, years: 9, style: "Quant-driven equity selection" },
   { id: "t58", name: "WaveX", country: "Turkey", market: "Forex", roi: 0.76, win: 0.77, years: 6, style: "Harmonic retracement" },
-  { id: "t59", name: "BlockVision", country: "Singapore", market: "Crypto", roi: 1.41, win: 0.7, years: 7, style: "AI pattern detection" },
-  { id: "t60", name: "OmegaTrade", country: "USA", market: "Indices", roi: 0.7, win: 0.8, years: 10, style: "Macro trend following" }
+  { id: "t59", name: "BlockVision", country: "Singapore", market: "Crypto", roi: 1.41, win: 0.70, years: 7, style: "AI pattern detection" },
+  { id: "t60", name: "OmegaTrade", country: "USA", market: "Indices", roi: 0.70, win: 0.80, years: 10, style: "Macro trend following" }
 ];
 
-// ====== Dynamic Pricing Based on ROI & WIN ======
+// تسعير ديناميكي 30–50$
 function priceForTrader(t) {
   const base = 25 + ((t.roi + t.win) / 2) * 30;
-  return Math.round(base * 10) / 10;
+  const price = Math.round(base);
+  return Math.min(50, Math.max(30, price));
 }
