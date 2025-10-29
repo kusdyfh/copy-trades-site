@@ -1,57 +1,43 @@
-// Using native fetch (Node 18+)
-
-export const handler = async (event) => {
+// Node 18+ has global fetch — no node-fetch import needed
+export async function handler(event) {
   try {
     const { amount, orderId, description, email } = JSON.parse(event.body || "{}");
+    if (!amount) return resp(400, { status:false, message:"price_amount is required" });
 
-    if (!amount) throw new Error("Missing 'amount' in request body");
-    if (!process.env.NOWPAYMENTS_API_KEY) throw new Error("Missing NOWPAYMENTS_API_KEY");
-    if (!process.env.SITE_URL) throw new Error("Missing SITE_URL");
+    const apiKey = process.env.NOWPAYMENTS_API_KEY;
+    if (!apiKey) return resp(500, { status:false, message:"Missing NOWPAYMENTS_API_KEY" });
 
-    const response = await fetch("https://api.nowpayments.io/v1/invoice", {
+    // Build invoice payload for NOWPayments
+    const payload = {
+      price_amount: Number(amount),
+      price_currency: "usd",
+      pay_currency: "usdttrc20",
+      order_id: orderId || ("ORD-"+Date.now()),
+      order_description: description || "Broker CORP subscription",
+      success_url: process.env.SITE_URL || "https://example.com",
+      cancel_url: process.env.SITE_URL || "https://example.com",
+      is_fixed_rate: true,
+      is_fee_paid_by_user: true,
+      // IPN optional; do NOT send ipn_payload (caused earlier error)
+    };
+
+    const res = await fetch("https://api.nowpayments.io/v1/invoice", {
       method: "POST",
       headers: {
-        "x-api-key": process.env.NOWPAYMENTS_API_KEY,
-        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        price_amount: amount,
-        price_currency: "usd",
-        pay_currency: "usdttrc20",
-        order_id: orderId || `order-${Date.now()}`,
-        order_description: description || "Broker CORP Subscription",
-        ipn_callback_url: `${process.env.SITE_URL}/.netlify/functions/ipn`,
-        success_url: `${process.env.SITE_URL}/#/wallet`,
-        cancel_url: `${process.env.SITE_URL}/#/wallet`,
-        is_fixed_rate: true,
-        customer_email: email || ""
-      }),
+      body: JSON.stringify(payload)
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error("NOWPayments API Error:", data);
-      throw new Error(data.message || "Payment API error");
+    const data = await res.json();
+    if (!res.ok) {
+      return resp(res.status, { status:false, message:data.message||"NOWPayments error", raw:data });
     }
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        status: true,
-        invoice_url: data.invoice_url,
-        invoice_id: data.id,
-        created_at: data.created_at,
-      }),
-    };
-
-  } catch (error) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        status: false,
-        message: error.message,
-      }),
-    };
+    return resp(200, { status:true, invoice_url:data.invoice_url, id:data.id });
+  } catch (e) {
+    return resp(500, { status:false, message:e.message });
   }
-};
+}
+const resp = (status, body) => ({ statusCode: status, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
