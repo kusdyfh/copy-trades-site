@@ -1,87 +1,39 @@
-// ✅ Broker CORP - Create Invoice Function (NOWPayments)
-export async function handler(event) {
+export default async (req, res) => {
   try {
-    const body = JSON.parse(event.body || "{}");
-    const {
-      price_amount,
-      price_currency,
-      pay_currency,
-      order_description,
-      ipn_callback_url,
-      order_id,
-      success_url,
-      cancel_url,
-    } = body;
+    const body = JSON.parse(req.body);
+    const { amount, plan } = body;
 
-    // ✅ التحقق من الحقول المطلوبة
-    if (!price_amount || !price_currency || !pay_currency) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          status: false,
-          message: "price_amount, price_currency, and pay_currency are required",
-        }),
-      };
+    if (!amount) {
+      return res.status(400).json({ status: false, message: "Amount is required" });
     }
 
-    // ✅ بيانات الاتصال بـ NOWPayments
-    const API_KEY = process.env.NOWPAYMENTS_API_KEY;
-    const API_URL = "https://api.nowpayments.io/v1/invoice";
-
-    // ✅ بناء الفاتورة
-    const payload = {
-      price_amount,
-      price_currency,
-      pay_currency,
-      order_description,
-      ipn_callback_url,
-      order_id,
-      success_url,
-      cancel_url,
-    };
-
-    // ✅ إرسال الطلب إلى NOWPayments
-    const response = await fetch(API_URL, {
+    const response = await fetch("https://api.nowpayments.io/v1/invoice", {
       method: "POST",
       headers: {
-        "x-api-key": API_KEY,
+        "x-api-key": process.env.NOWPAYMENTS_API_KEY,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        price_amount: amount,
+        price_currency: "usd",
+        pay_currency: "usdttrc20",
+        order_id: `ORDER-${Date.now()}`,
+        order_description: `Subscription plan: ${plan}`,
+        success_url: `${process.env.SITE_URL}/success.html`,
+        cancel_url: `${process.env.SITE_URL}/cancel.html`,
+      }),
     });
 
     const data = await response.json();
+    console.log("NOWPayments response:", data);
 
-    if (!response.ok) {
-      console.error("NOWPayments error:", data);
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          status: false,
-          message: data.message || "Failed to create invoice",
-          data,
-        }),
-      };
+    if (data.invoice_url) {
+      return res.status(200).json({ status: true, invoice_url: data.invoice_url });
+    } else {
+      return res.status(400).json({ status: false, message: data.message || "Failed to create invoice" });
     }
-
-    // ✅ إرجاع رابط الفاتورة
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        status: true,
-        invoice_url: data.invoice_url,
-        invoice_id: data.id,
-      }),
-    };
   } catch (err) {
-    console.error("Invoice error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        status: false,
-        message: "Internal Server Error",
-        error: err.message,
-      }),
-    };
+    console.error("Error creating invoice:", err);
+    return res.status(500).json({ status: false, message: "Server error" });
   }
-}
+};
