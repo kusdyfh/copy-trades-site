@@ -1,5 +1,5 @@
 /* =======================
-   Broker CORP – app.js (full)
+   Broker CORP – app.js (final, responsive + NOWPayments)
    ======================= */
 
 const app = document.getElementById("app");
@@ -20,7 +20,8 @@ const I18N = {
 
     hero_h1_a: "Trade like a",
     hero_h1_b: "professional",
-    hero_sub: "Verified traders • Transparent analytics • Full academy • Secure USDT (TRC20) payments.",
+    hero_sub:
+      "Verified traders • Transparent analytics • Full academy • Secure USDT (TRC20) payments.",
     cta_explore: "Explore Traders",
     cta_learn: "Start Learning",
 
@@ -51,7 +52,8 @@ const I18N = {
     wallet_method: "Payment Method",
     wallet_method_val: "Crypto — USDT (TRC20)",
     wallet_pay: "Pay Now",
-    wallet_msg_after: "Your payment is being processed securely. You will receive confirmation shortly.",
+    wallet_msg_after:
+      "Your payment is being processed securely. You will receive confirmation shortly.",
     wallet_back_home: "← Back to Home",
   },
   ar: {
@@ -67,7 +69,8 @@ const I18N = {
 
     hero_h1_a: "تداول مثل",
     hero_h1_b: "محترف",
-    hero_sub: "متداولون موثوقون • شفافية في التحليل • أكاديمية كاملة • دفع آمن USDT (TRC20).",
+    hero_sub:
+      "متداولون موثوقون • شفافية في التحليل • أكاديمية كاملة • دفع آمن USDT (TRC20).",
     cta_explore: "استكشاف المتداولين",
     cta_learn: "ابدأ التعلم",
 
@@ -98,20 +101,21 @@ const I18N = {
     wallet_method: "طريقة الدفع",
     wallet_method_val: "عملة رقمية — USDT (TRC20)",
     wallet_pay: "ادفع الآن",
-    wallet_msg_after: "يتم الآن معالجة دفعتك بأمان. ستصلك رسالة تأكيد قريبًا.",
+    wallet_msg_after:
+      "يتم الآن معالجة دفعتك بأمان. ستصلك رسالة تأكيد قريبًا.",
     wallet_back_home: "← رجوع إلى الرئيسية",
   },
 };
 const t = (k) => I18N[LANG][k] || k;
 
 /* ---------- helpers ---------- */
-function $(s){ return document.querySelector(s); }
+function $(s) { return document.querySelector(s); }
 function initials(n){ return n.split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase(); }
 function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+function toggleLang(){ LANG = LANG==="en"?"ar":"en"; localStorage.setItem("LANG",LANG); render(); }
 
 /* أسعار المتداولين 30–55 حسب الأداء */
 function priceForTrader(tr){
-  // win: 0.70–1.00, roi: 0.20–0.80 (تقريبًا)
   const winScore = (tr.win - 0.70) / 0.30;     // 0..1
   const roiScore = (tr.roi - 0.20) / 0.60;     // 0..1
   let price = 30 + Math.round(25 * (0.65*winScore + 0.35*roiScore)); // 30..55
@@ -154,7 +158,6 @@ const IMAGES = {
   how1: "https://images.unsplash.com/photo-1559696780-2c9a9c5a1a7b?q=80&w=1600&auto=format&fit=crop", // candlesticks
   how2: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=1600&auto=format&fit=crop", // phone trading
   how3: "https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1600&auto=format&fit=crop", // monitors
-  chart: "https://images.unsplash.com/photo-1640340434883-8e6e8bbaf4fd?q=80&w=1600&auto=format&fit=crop",
 };
 
 /* ---------- logo + navbar ---------- */
@@ -182,40 +185,41 @@ function Navbar(){
     {k:"nav_faq", p:"faq"},
     {k:"nav_contact", p:"contact"},
   ];
+  // شريط متجاوب: عند ضيق الشاشة تتحول الأزرار لسطرين
   return `
-  <div class="container" style="position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#0a0b10 80%,transparent)">
-    <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:12px">
-      <div style="display:flex;align-items:center;gap:10px;font-weight:800">
+  <div class="container" style="position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#0a0b10 85%,transparent)">
+    <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px;font-weight:800;white-space:nowrap">
         ${LogoSVG()} <span style="color:var(--gold)">Broker CORP</span>
       </div>
-      <nav style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
-        ${items.map(i=>`<button class="btn" onclick="navigate('${i.p}')">${t(i.k)}</button>`).join("")}
+      <nav style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:flex-end">
+        ${items.map(i=>`<button class="btn" style="padding:8px 10px" onclick="navigate('${i.p}')">${t(i.k)}</button>`).join("")}
         <button class="btn" style="padding:8px 10px" onclick="toggleLang()">${t("toggle_lang")}</button>
       </nav>
     </div>
   </div>`;
 }
-function toggleLang(){ LANG = LANG==="en"?"ar":"en"; localStorage.setItem("LANG",LANG); render(); }
 
 /* ---------- HOME ---------- */
 function Hero(){
   return `
   <section class="container">
     <div class="card" style="
-      padding:40px 24px;
+      padding:32px 18px;
       background:linear-gradient(180deg,#0f131a,rgba(16,20,27,.9)),
                  url('${IMAGES.hero}') center/cover no-repeat;
+      border-radius:14px
       ">
-      <h1 style="font-size:2.4rem;font-weight:900;margin:0 0 10px">
+      <h1 style="font-size:clamp(22px,4vw,40px);font-weight:900;margin:0 0 10px;line-height:1.2">
         ${t("hero_h1_a")} <span style="color:var(--gold)">${t("hero_h1_b")}</span>
       </h1>
-      <p class="text-muted" style="max-width:850px">${t("hero_sub")}</p>
+      <p class="text-muted" style="max-width:880px;font-size:clamp(13px,2.4vw,16px)">${t("hero_sub")}</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
         <button class="btn btn-primary" onclick="navigate('traders')">${t("cta_explore")}</button>
         <button class="btn" onclick="navigate('academy')">${t("cta_learn")}</button>
       </div>
 
-      <div class="card" style="margin-top:22px">
+      <div class="card" style="margin-top:18px">
         <div class="text-muted" style="margin-bottom:8px">${t("stats_title")}</div>
         <div class="grid-cards" style="gap:10px;text-align:center">
           <div class="card"><strong class="counter" data-to="64" style="font-size:1.6rem;color:var(--gold)">0</strong><div class="text-muted">${t("stats_traders")}</div></div>
@@ -235,14 +239,14 @@ function HowItWorks(){
   ];
   return `
   <section class="container reveal">
-    <h2 style="margin:10px 0">${t("how_title")}</h2>
+    <h2 style="margin:10px 0;font-size:clamp(18px,3vw,24px)">${t("how_title")}</h2>
     <div class="grid-cards">
       ${steps.map(s => `
         <div class="card" style="overflow:hidden;position:relative">
           <img src="${s.img}" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:10px;filter:contrast(1.05) saturate(1.05)">
           <div class="hr"></div>
           <div style="font-weight:700">${s.t}</div>
-          <div class="text-muted">${s.d}</div>
+          <div class="text-muted" style="font-size:.95rem">${s.d}</div>
           <div style="position:absolute;inset:auto -30% -30% auto;width:200px;height:200px;background:radial-gradient(ellipse at center, rgba(249,213,103,.18), transparent 60%);pointer-events:none"></div>
         </div>
       `).join("")}
@@ -252,18 +256,14 @@ function HowItWorks(){
 
 function Home(){
   document.documentElement.dir = (LANG==="ar"?"rtl":"ltr");
-  return `
-    ${Navbar()}
-    ${Hero()}
-    ${HowItWorks()}
-  `;
+  return `${Navbar()}${Hero()}${HowItWorks()}`;
 }
 
 /* ---------- Traders / Cards ---------- */
 function CardTrader(tr){
   return `
-  <div class="card reveal">
-    <div style="display:flex;align-items:center;justify-content:space-between;">
+  <div class="card reveal" style="padding:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="avatar">${initials(tr.name)}</div>
         <div>
@@ -271,16 +271,16 @@ function CardTrader(tr){
           <div class="text-muted" style="font-size:.9rem">${tr.market} • ${tr.country}</div>
         </div>
       </div>
-      <div class="text-muted" style="font-size:.85rem">$${priceForTrader(tr)}/mo</div>
+      <div class="text-muted" style="font-size:.9rem;color:var(--gold)">$${priceForTrader(tr)}/mo</div>
     </div>
     <div class="hr"></div>
-    <div style="display:flex;justify-content:space-between;font-size:.9rem">
+    <div style="display:flex;justify-content:space-between;font-size:.9rem;gap:8px;flex-wrap:wrap">
       <div>ROI <b>${Math.round(tr.roi*100)}%</b></div>
       <div>WIN <b>${Math.round(tr.win*100)}%</b></div>
       <div>EXP <b>${tr.years}y</b></div>
     </div>
     <div class="hr"></div>
-    <button class="btn btn-primary" style="width:100%" onclick="openProfile(${tr.id})">View Profile</button>
+    <button class="btn btn-primary" style="width:100%" onclick="openProfile(${tr.id})">${LANG==='ar'?'عرض الملف':'View Profile'}</button>
   </div>`;
 }
 function Traders(){
@@ -288,7 +288,7 @@ function Traders(){
   return `
   ${Navbar()}
   <div class="container">
-    <h2>Professional Traders</h2>
+    <h2 style="font-size:clamp(18px,3vw,24px)">Professional Traders</h2>
     <div class="grid-cards">
       ${TRADERS.map(CardTrader).join("")}
     </div>
@@ -306,29 +306,29 @@ function Pricing(){
   return `
   ${Navbar()}
   <div class="container">
-    <h2>${t("pricing")}</h2>
+    <h2 style="font-size:clamp(18px,3vw,24px)">${t("pricing")}</h2>
     <div class="grid-cards">
       ${plans.map(p=>`
         <div class="card reveal">
           <h3>${p.name}</h3>
           <p class="text-muted">${p.desc}</p>
           <div style="font-size:1.6rem;font-weight:700;margin:10px 0">$${p.price}</div>
-          <button class="btn btn-primary" onclick="goPay('${p.id}',${p.price})">Subscribe</button>
+          <button class="btn btn-primary" onclick="goPay('${p.id}',${p.price})">${LANG==='ar'?'اشترك':'Subscribe'}</button>
         </div>`).join("")}
     </div>
     <p class="text-muted" style="margin-top:10px">USDT • TRC20</p>
   </div>`;
 }
 
-/* ---------- Academy (مختصر) ---------- */
+/* ---------- Academy ---------- */
 function Academy(){
   document.documentElement.dir = (LANG==="ar"?"rtl":"ltr");
   return `
   ${Navbar()}
   <div class="container">
-    <h2>${t("academy")}</h2>
-    <p class="text-muted">Free lessons from experts to level up your trading skills:</p>
-    <ul>
+    <h2 style="font-size:clamp(18px,3vw,24px)">${t("academy")}</h2>
+    <p class="text-muted">${LANG==='ar'?'دروس مجانية من خبراء لرفع مهاراتك:':'Free lessons from experts to level up your trading skills:'}</p>
+    <ul style="line-height:1.9">
       <li><a href="https://www.youtube.com/watch?v=Gc2en3nHxA4" target="_blank">Understanding Market Trends</a></li>
       <li><a href="https://www.youtube.com/watch?v=8cH6x3yixK0" target="_blank">How to Read Candlestick Charts</a></li>
       <li><a href="https://www.youtube.com/watch?v=E4mEJdDpL8I" target="_blank">Risk Management in Forex</a></li>
@@ -354,14 +354,14 @@ function Wallet(){
 
   return `
   ${Navbar()}
-  <div style="min-height:calc(100vh - 96px);display:grid;place-items:center;background:linear-gradient(180deg,#0b0d11,#0a0b10)">
-    <div class="card" style="width:min(720px,92%);padding:22px;border:1px solid var(--border)">
+  <div style="min-height:calc(100vh - 96px);display:grid;place-items:center;background:linear-gradient(180deg,#0b0d11,#0a0b10);padding:12px">
+    <div class="card" style="width:min(720px,96%);padding:22px;border:1px solid var(--border)">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
         ${LogoSVG()} <div style="font-weight:800;color:var(--gold)">Broker CORP</div>
       </div>
       <h2 style="margin:0 0 10px">${t("wallet_title")}</h2>
 
-      <div class="grid-cards" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+      <div class="grid-cards" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
         <div class="card" style="margin:0">
           <div class="text-muted" style="font-size:.85rem">${t("wallet_plan")}</div>
           <div style="font-weight:700">${selection.name || "Plan"}</div>
@@ -399,22 +399,50 @@ function Wallet(){
     </div>
   </div>`;
 }
-function payNow(){
+
+/* ---------- الدفع الحقيقي: اتصال NOWPayments عبر Netlify Function ---------- */
+async function payNow(){
   const email = $("#checkout-email")?.value?.trim();
   if(!email || !/^\S+@\S+\.\S+$/.test(email)){
     alert(LANG==="ar" ? "يرجى إدخال بريد إلكتروني صالح" : "Please enter a valid email address");
     return;
   }
-  // هنا تقدر تستدعي وظيفة create-invoice على Netlify Functions
-  // وتكمل عملية الدفع. الآن مجرد تجربة واجهة:
-  const msg = $("#pay-msg");
-  if(msg){ msg.style.display = "block"; }
-  // ممكن تحفظ الإيميل مع الخطة في sessionStorage
+
+  // البيانات المختارة (خطة/متداول)
   const sel = sessionStorage.getItem("plan");
   const selection = sel ? JSON.parse(sel) : null;
-  sessionStorage.setItem("checkout_email", email);
-  // يمكنك توجيه المستخدم بعد قليل إلى صفحة تأكيد
-  setTimeout(()=>alert(LANG==="ar"?"تم استلام الطلب. سنؤكد الدفع قريبًا.":"Order received. We will confirm your payment shortly."), 200);
+  const planName = selection?.name || "Plan";
+  const price = selection?.price || 49;
+
+  // إنشاء الفاتورة من الوظيفة (تأكّد create-invoice.js يستخدم handler(event) ويعيد invoice_url)
+  try {
+    const res = await fetch("/.netlify/functions/create-invoice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        // نرسل الحقول التي تتوقعها وظيفة السيرفر (الأكثر أمانًا وتوافقًا)
+        price_amount: price,
+        price_currency: "usd",
+        pay_currency: "usdttrc20",
+        order_description: `Subscription for ${planName} (${email})`,
+        order_id: `ORDER-${Date.now()}`,
+        success_url: `${location.origin}/success.html`,
+        cancel_url: `${location.origin}/cancel.html`,
+      }),
+    });
+
+    const data = await res.json();
+    if (data && data.invoice_url) {
+      window.location.href = data.invoice_url; // ✅ فتح صفحة الدفع الرسمية
+    } else {
+      // لو رجعت الوظيفة برسالة خطأ، نظهرها
+      alert(data?.message ? `Payment init failed: ${data.message}` : "Payment init failed.");
+      const msg = $("#pay-msg"); if(msg) { msg.style.display = "block"; }
+    }
+  } catch (err) {
+    console.error(err);
+    alert(LANG==="ar" ? "حدث خطأ في بدء الدفع." : "Error initiating payment.");
+  }
 }
 
 /* ---------- Go Pay from Pricing ---------- */
