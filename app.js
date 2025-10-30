@@ -401,49 +401,38 @@ function Wallet(){
 }
 
 /* ---------- الدفع الحقيقي: اتصال NOWPayments عبر Netlify Function ---------- */
-async function payNow(){
+async function payNow() {
   const email = $("#checkout-email")?.value?.trim();
-  if(!email || !/^\S+@\S+\.\S+$/.test(email)){
-    alert(LANG==="ar" ? "يرجى إدخال بريد إلكتروني صالح" : "Please enter a valid email address");
+  if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+    alert(LANG === "ar" ? "يرجى إدخال بريد إلكتروني صالح" : "Please enter a valid email address");
     return;
   }
 
-  // البيانات المختارة (خطة/متداول)
-  const sel = sessionStorage.getItem("plan");
-  const selection = sel ? JSON.parse(sel) : null;
-  const planName = selection?.name || "Plan";
-  const price = selection?.price || 49;
+  const sel = JSON.parse(sessionStorage.getItem("plan") || "{}");
+  const amount = sel.price || 0;
+  const plan = sel.name || "Unknown Plan";
 
-  // إنشاء الفاتورة من الوظيفة (تأكّد create-invoice.js يستخدم handler(event) ويعيد invoice_url)
   try {
     const res = await fetch("/.netlify/functions/create-invoice", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        // نرسل الحقول التي تتوقعها وظيفة السيرفر (الأكثر أمانًا وتوافقًا)
-        price_amount: price,
-        price_currency: "usd",
-        pay_currency: "usdttrc20",
-        order_description: `Subscription for ${planName} (${email})`,
-        order_id: `ORDER-${Date.now()}`,
-        success_url: `${location.origin}/success.html`,
-        cancel_url: `${location.origin}/cancel.html`,
-      }),
+      body: JSON.stringify({ amount, plan }),
     });
 
     const data = await res.json();
-    if (data && data.invoice_url) {
-      window.location.href = data.invoice_url; // ✅ فتح صفحة الدفع الرسمية
+    console.log("Invoice response:", data);
+
+    if (data.status && data.invoice_url) {
+      window.location.href = data.invoice_url; // 🔁 يرسل المستخدم إلى صفحة الدفع مباشرة
     } else {
-      // لو رجعت الوظيفة برسالة خطأ، نظهرها
-      alert(data?.message ? `Payment init failed: ${data.message}` : "Payment init failed.");
-      const msg = $("#pay-msg"); if(msg) { msg.style.display = "block"; }
+      alert(data.message || "Payment initialization failed.");
     }
   } catch (err) {
     console.error(err);
-    alert(LANG==="ar" ? "حدث خطأ في بدء الدفع." : "Error initiating payment.");
+    alert("Error initializing payment.");
   }
 }
+
 
 /* ---------- Go Pay from Pricing ---------- */
 function goPay(id, price){
