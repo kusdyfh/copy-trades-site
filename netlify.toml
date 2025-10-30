@@ -1,3 +1,7 @@
+# =============================
+# 🚀 Netlify Configuration File
+# =============================
+
 [build]
   publish = "."
   command = ""
@@ -6,6 +10,29 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# -----------------------------
+# ✅ HTML Page Redirects
+# -----------------------------
+
+# الصفحة الرئيسية
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# صفحة تسجيل الدخول
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+# صفحة المحفظة
+[[redirects]]
+  from = "/wallet"
+  to = "/wallet.html"
+  status = 200
+
+# أي روابط أخرى ترجع للصفحة الرئيسية (SPA fallback)
 [[redirects]]
   from = "/*"
   to = "/index.html"
