@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wallet | Broker CORP</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #0b0d11;
+      color: #f1f1f1;
+      font-family: 'Poppins', sans-serif;
+    }
+    .container {
+      width: min(95%, 900px);
+      margin: 60px auto;
+    }
+    .card {
+      background: linear-gradient(180deg,#111319,#0d0e12);
+      border: 1px solid #2a2b2f;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 14px rgba(255,215,0,0.05);
+    }
+    h2 {
+      color: #f9d567;
+      margin-bottom: 12px;
+    }
+    .balance {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f9d567;
+    }
+    .btn {
+      background: #f9d567;
+      color: #0b0d11;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn:hover {
+      background: #ffd84f;
+    }
+    input, textarea {
+      width: 100%;
+      background: #10141b;
+      border: 1px solid #2a2b2f;
+      color: #f1f1f1;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+    .success {
+      background: #143018;
+      border: 1px solid #2d542d;
+      color: #a7ffb0;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h2>My Wallet</h2>
+      <p>Balance</p>
+      <div class="balance">1250.00 <span style="color:#888;font-size:1rem">USDT</span></div>
+      <p style="color:#888;margin-top:8px">Network: TRC20</p>
+    </div>
+
+    <div class="card">
+      <h3>Withdraw Funds</h3>
+      <form id="withdrawForm">
+        <input type="number" id="amount" placeholder="Amount (USDT)" min="10" required />
+        <input type="text" id="wallet" placeholder="Your TRC20 Wallet Address" required />
+        <textarea id="notes" rows="3" placeholder="Notes (optional)"></textarea>
+        <button class="btn" type="submit">Submit Withdrawal</button>
+      </form>
+      <div id="successMsg" class="success">✅ Withdrawal request sent successfully. You will be contacted soon.</div>
+    </div>
+
+    <div class="card">
+      <h3>Transactions</h3>
+      <ul id="transactions" style="list-style:none;padding-left:0;color:#aaa">
+        <li>• Subscription - 49 USDT</li>
+        <li>• Subscription - 35 USDT</li>
+        <li>• Deposit - 100 USDT</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("withdrawForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const amount = document.getElementById("amount").value;
+      const wallet = document.getElementById("wallet").value;
+      const notes = document.getElementById("notes").value;
+
+      const res = await fetch("/.netlify/functions/submit-withdrawal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, wallet, notes }),
+      });
+
+      const data = await res.json();
+      if (data.status) {
+        document.getElementById("successMsg").style.display = "block";
+        e.target.reset();
+      } else {
+        alert("Error: " + data.message);
+      }
+    });
+  </script>
+</body>
+</html>
