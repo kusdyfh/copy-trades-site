@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account | Broker CORP</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #0b0d11 0%, #07080a 100%);
+      color: #f1f1f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .auth-card {
+      background: linear-gradient(180deg,#111319,#0d0e12);
+      border: 1px solid #2a2b2f;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(249,213,103,0.08);
+      padding: 30px;
+      width: min(90%, 420px);
+      text-align: center;
+    }
+    h2 {
+      color: #f9d567;
+      margin-bottom: 18px;
+    }
+    input {
+      width: 100%;
+      background: #10141b;
+      border: 1px solid #2a2b2f;
+      color: #f1f1f1;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      outline: none;
+      font-size: 1rem;
+    }
+    .btn {
+      background: #f9d567;
+      color: #0b0d11;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn:hover {
+      background: #ffd84f;
+    }
+    .switch {
+      color: #aaa;
+      margin-top: 14px;
+      cursor: pointer;
+    }
+    .switch span {
+      color: #f9d567;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <h2 id="title">Create Account</h2>
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button class="btn" id="submitBtn">Sign Up</button>
+    <div class="switch" id="toggleMode">Already have an account? <span>Login</span></div>
+  </div>
+
+  <script>
+    let isLogin = false;
+    const title = document.getElementById('title');
+    const toggle = document.getElementById('toggleMode');
+    const btn = document.getElementById('submitBtn');
+    const nameField = document.getElementById('name');
+
+    toggle.onclick = () => {
+      isLogin = !isLogin;
+      if (isLogin) {
+        title.textContent = 'Login';
+        nameField.style.display = 'none';
+        btn.textContent = 'Login';
+        toggle.innerHTML = `Don't have an account? <span>Sign Up</span>`;
+      } else {
+        title.textContent = 'Create Account';
+        nameField.style.display = 'block';
+        btn.textContent = 'Sign Up';
+        toggle.innerHTML = `Already have an account? <span>Login</span>`;
+      }
+    };
+
+    btn.onclick = () => {
+      const name = nameField.value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!email || !password || (!isLogin && !name)) {
+        alert('Please fill all required fields.');
+        return;
+      }
+
+      if (isLogin) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.email === email && user.password === password) {
+          alert('Welcome back ' + user.name + '!');
+          localStorage.setItem('loggedIn', 'true');
+          window.location.href = 'index.html';
+        } else {
+          alert('Incorrect email or password.');
+        }
+      } else {
+        const user = { name, email, password, balance: 0, subscriptions: [], withdrawals: [] };
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('loggedIn', 'true');
+        alert('Account created successfully!');
+        window.location.href = 'index.html';
+      }
+    };
+  </script>
+</body>
+</html>
