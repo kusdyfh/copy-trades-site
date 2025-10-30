@@ -1,10 +1,13 @@
-// netlify/functions/create-invoice.js
 export async function handler(event) {
+  console.log("✅ create-invoice function started");
+
   try {
     const body = JSON.parse(event.body || "{}");
-    const { amount, plan } = body;
+    console.log("🟡 Received body:", body);
 
+    const { amount, plan } = body;
     if (!amount) {
+      console.log("❌ Missing amount in body");
       return {
         statusCode: 400,
         body: JSON.stringify({ status: false, message: "Amount is required" }),
@@ -12,7 +15,8 @@ export async function handler(event) {
     }
 
     const apiKey = process.env.NOWPAYMENTS_API_KEY;
-    const siteURL = process.env.SITE_URL || "https://your-site.netlify.app";
+    const siteURL = process.env.SITE_URL || "https://copytrades.netlify.app";
+    console.log("🟢 Using API Key (first 6 chars):", apiKey?.slice(0, 6));
 
     const response = await fetch("https://api.nowpayments.io/v1/invoice", {
       method: "POST",
@@ -32,14 +36,16 @@ export async function handler(event) {
     });
 
     const data = await response.json();
-    console.log("NOWPayments response:", data);
+    console.log("💬 NOWPayments response:", data);
 
     if (data && data.invoice_url) {
+      console.log("✅ Invoice created successfully:", data.invoice_url);
       return {
         statusCode: 200,
         body: JSON.stringify({ status: true, invoice_url: data.invoice_url }),
       };
     } else {
+      console.log("⚠️ Invoice creation failed:", data.message);
       return {
         statusCode: 400,
         body: JSON.stringify({
@@ -49,7 +55,7 @@ export async function handler(event) {
       };
     }
   } catch (err) {
-    console.error("Error creating invoice:", err);
+    console.error("🔥 Error creating invoice:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({
